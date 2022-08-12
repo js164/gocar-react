@@ -27,6 +27,7 @@ import AlertBar from './Components/General/Alert';
 import Wallet from './Components/Profile/Wallet';
 import Otp from './Components/Profile/Otp';
 import Profile from './Components/Profile/Profile';
+import WalletApprove from './Components/Profile/WalletApprove';
 
 export default class AppClass extends Component {
   render() {
@@ -50,6 +51,7 @@ export default class AppClass extends Component {
               <Route exact path="/cardetail/:id" element={<ProtectedRoute> <CarDetail /> </ProtectedRoute>} />
               <Route exact path="/profile" element={<ProtectedRoute> <Profile /> </ProtectedRoute>} />
               <Route exact path="/profile/wallet" element={<ProtectedRoute> <Wallet /> </ProtectedRoute>} />
+              <Route exact path="/profile/walletRequest" element={<AdminProtectedRoute> <WalletApprove /> </AdminProtectedRoute>} />
               <Route exact path="/profile/wallet/otp" element={<ProtectedRoute> <Otp /> </ProtectedRoute>} />
               <Route exact path="/carCategory" element={<AdminProtectedRoute> <Category /> </AdminProtectedRoute>} />
               <Route exact path="/addCar" element={<AdminProtectedRoute> <AddCar /> </AdminProtectedRoute>} />

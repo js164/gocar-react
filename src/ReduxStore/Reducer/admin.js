@@ -6,11 +6,11 @@ const AdminStatus=(state = isAdmin , action)=>{
         case "SETADMIN" : 
             isAdmin=true;
             return isAdmin;
-        case "SETADMIN" : 
+        case "DESETADMIN" : 
             isAdmin=false;
             return isAdmin;
         default: 
-            if(isAdmin===null){
+            if(isAdmin===null || isAdmin===undefined){
                 if(localStorage.getItem('access_token') && localStorage.getItem('refresh_token') && localStorage.getItem('isAdmin')==="true"){
                     isAdmin=true
                 }else{
