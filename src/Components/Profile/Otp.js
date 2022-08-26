@@ -13,6 +13,7 @@ export class Otp extends Component {
         }
         this.setOtp=this.setOtp.bind(this)
         this.verify=this.verify.bind(this)
+        this.resendOTP=this.resendOTP.bind(this)
     }
     setOtp(e){
         if(e.target.value.length<=6){
@@ -20,6 +21,15 @@ export class Otp extends Component {
                 otp: e.target.value
             })
         }
+    }
+    resendOTP(e) {
+        e.preventDefault();
+        axios.get('/profile/wallet/otp/resend').then(response => {
+            console.log(response)
+            if(response.data.success){
+                this.props.dispatch(setAlertShow('success', '', response.data.message))
+            }
+        })
     }
     verify(e){
         e.preventDefault();
@@ -43,7 +53,10 @@ export class Otp extends Component {
             <p>OTP will be sended on your registerd mobile number.</p>
             {/* <input className='m-4' type="number" /> */}
             <input type="number" className="form-control mt-4 w-25" value={this.state.otp} onChange={this.setOtp} placeholder="OTP..."></input>
+            <div className="d-flex flex-row">
             <button className="btn btn-success m-3" disabled={this.state.otp.length !== 6} onClick={this.verify}>Verify</button>
+            <button className="btn btn-success m-3"  onClick={this.resendOTP}>Resend OTP</button>
+            </div>
         </div> 
       </div>
     )
