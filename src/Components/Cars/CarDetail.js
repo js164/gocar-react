@@ -14,7 +14,8 @@ export class CarDetail extends Component {
             rates: {},
             EpricePerHour: 0,
             EpricePerKm: 0,
-            loading:true
+            loading:true,
+            WalletCreated:false
         }
         this.getData = this.getData.bind(this)
         this.EHourPlus = this.EHourPlus.bind(this)
@@ -79,20 +80,27 @@ export class CarDetail extends Component {
     }
     componentDidMount() {
         this.getData()
+        axios.get('/profile/wallet').then(response => {
+            console.log(response);
+                this.setState({
+                    WalletCreated: response.data.WalletCreated,
+                })
+        }).catch(err => {
+            console.log(err)
+        })
     }
     getEstimatedPrice(e) {
         e.preventDefault()
         let cal = document.getElementById('Calculation')
         let text = ''
-        if (this.state.EpricePerKm !== 0) {
-            text = `Estimated Price for ${this.state.EpricePerKm} Km will be ` + (this.state.EpricePerKm * this.state.rates.pricePerKm) + '<br />'
-        }
-        if (this.state.EpricePerHour !== 0) {
-            text += `Estimated Price for ${this.state.EpricePerHour} Hour will be ` + (this.state.EpricePerHour * this.state.rates.pricePerHour);
-
-        }
-        if (this.state.EpricePerHour === 0 && this.state.EpricePerKm === 0) {
+        if (this.state.EpricePerHour === 0 || this.state.EpricePerKm === 0) {
             text = 'Please provide a valid input!';
+        }else{
+            let val1=(this.state.EpricePerKm * this.state.rates.pricePerKm);
+            let val2=(this.state.EpricePerHour * this.state.rates.pricePerHour);
+            text = `Estimated Price for ${this.state.EpricePerKm} Km will be ` + val1 + '<br />'
+            text += `Estimated Price for ${this.state.EpricePerHour} Hour will be ` + val2 +'<br />'
+            text += `Estimated Total Price: ${val1+val2}`
         }
         cal.innerHTML = text
     }
@@ -128,7 +136,9 @@ export class CarDetail extends Component {
                                     :
                                     <>
                                         <hr />
-                                        <Link to='/book' className="btn btn-success w-100 my-1">Book a Car</Link>
+                                        {this.state.WalletCreated ? 
+                                        <Link to='book' className="btn btn-success w-100 my-1">Book a Car</Link> : 
+                                        <Link to='/profile/wallet' className="btn btn-success w-100 my-1">Create Wallet to Book</Link> }
                                         <br />
                                         <br />
                                         <h3 className='m-4'> Calculate Estimated Price </h3>
@@ -143,7 +153,7 @@ export class CarDetail extends Component {
                                                     <path fillRule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z" />
                                                 </svg> </div>
                                             </div>
-                                            <h6 style={{ marginTop: "20px" }}>or</h6>
+                                            <h6 style={{ marginTop: "20px" }}>&</h6>
                                             <div>
                                                 <h6>Estimated Hours</h6>
                                                 <div onClick={this.EHourMinus} className='btn btn-secondary'> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-dash-lg" viewBox="0 0 16 16">
@@ -155,7 +165,7 @@ export class CarDetail extends Component {
                                                 </svg> </div>
                                             </div>
                                         </div>
-                                        <button className="btn btn-success w-100 my-5" onClick={this.getEstimatedPrice}>Calculate Estimated Price</button>
+                                        <button className="btn btn-success w-100 my-5" disabled={this.state.EpricePerHour <= 0 || this.state.EpricePerKm <= 0} onClick={this.getEstimatedPrice}>Calculate Estimated Price</button>
                                         <h5 id="Calculation"> </h5>
                                     </>
                                 }

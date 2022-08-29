@@ -28,6 +28,7 @@ import Wallet from './Components/Profile/Wallet';
 import Otp from './Components/Profile/Otp';
 import Profile from './Components/Profile/Profile';
 import WalletApprove from './Components/Profile/WalletApprove';
+import BookCar from './Components/Cars/BookCar';
 
 export default class AppClass extends Component {
   render() {
@@ -49,6 +50,7 @@ export default class AppClass extends Component {
               <Route exact path="/adminDashboard" element={<AdminProtectedRoute> <AdminDashboard /> </AdminProtectedRoute>} />
               <Route exact path="/cars" element={<ProtectedRoute> <Cars /> </ProtectedRoute>} />
               <Route exact path="/cardetail/:id" element={<ProtectedRoute> <CarDetail /> </ProtectedRoute>} />
+              <Route exact path="/cardetail/:id/book" element={<ProtectedRoute> <BookCar /> </ProtectedRoute>} />
               <Route exact path="/profile" element={<ProtectedRoute> <Profile /> </ProtectedRoute>} />
               <Route exact path="/profile/wallet" element={<ProtectedRoute> <Wallet /> </ProtectedRoute>} />
               <Route exact path="/profile/walletRequest" element={<AdminProtectedRoute> <WalletApprove /> </AdminProtectedRoute>} />
