@@ -18,7 +18,7 @@ export class BookCar extends Component {
       end_date_time: Date.now(),
       EKm: 0,
       name: '',
-      mobile: null,
+      mobile: '',
       wallet: null,
       rates: null,
       booking: null,
@@ -73,6 +73,8 @@ export class BookCar extends Component {
   }
 
   confirmShow() {
+    let eprice=this.getEstimatedPrice()
+    let minBalance= eprice + Math.max(eprice/10,1000)
     let b = {
       name: this.state.name,
       mobile: this.state.mobile,
@@ -80,7 +82,8 @@ export class BookCar extends Component {
       pickUpDateTime: this.state.start_date_time,
       dropUpDateTime: this.state.end_date_time,
       estimateKm: this.state.EKm,
-      estimatePrice: this.getEstimatedPrice()
+      estimatePrice: eprice,
+      minBalance: minBalance,
     }
     this.setState({
       booking: b,
@@ -142,13 +145,16 @@ export class BookCar extends Component {
           <button className="btn btn-success w-100 my-5" disabled={this.state.start_date_time - this.state.end_date_time >= 0 || this.state.EKm <= 0} onClick={this.getEstimatedPrice}>Calculate Estimated Price</button>
           <h5 id="Calculation"> </h5>
           <div className="d-flex flex-row justify-content-around">
-            <button className="btn btn-success w-25" onClick={this.confirmShow}>Book Car</button>
+            <button className="btn btn-success w-25" disabled={this.state.start_date_time - this.state.end_date_time >= 0 || this.state.EKm <= 0 || !this.state.name || this.state.mobile.length<10} onClick={this.confirmShow}>Book Car</button>
             <div className='w-25'>
-              <button className="btn btn-secondory" disabled>Wallet: &#8377;{this.state.wallet && this.state.wallet.amount}</button>
+              <button className="btn" disabled>Wallet:<strong> &#8377;{this.state.wallet && this.state.wallet.amount} </strong></button>
               <Link to='/profile/wallet' className='mx-2 btn btn-primary'>Add Money</Link>
             </div>
           </div>
         </div>
+
+
+
         <Modal show={this.state.confirmModelShow} onHide={this.confirmClose}>
           <Modal.Header closeButton>
             <Modal.Title>Confirm Booking</Modal.Title>
@@ -164,12 +170,14 @@ export class BookCar extends Component {
                 Estimated Price:<strong> {this.state.booking.estimatePrice}</strong><br />
               </div>
             }
+            {this.state.wallet && this.state.booking && (this.state.wallet.amount < this.state.booking.minBalance) && 
+            <p className='text-danger'> You don't have sufficient balace to book a car! <br />Please add <strong> &#8377; {this.state.booking.minBalance - this.state.wallet.amount } </strong> to wallet to continue.</p>}
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={this.confirmClose}>
               Close
             </Button>
-            <Button variant="primary" onClick={this.confirmBooking}>
+            <Button variant="primary" disabled={this.state.wallet && this.state.booking && (this.state.wallet.amount < this.state.booking.minBalance)} onClick={this.confirmBooking}>
               Confirm Booking
             </Button>
           </Modal.Footer>

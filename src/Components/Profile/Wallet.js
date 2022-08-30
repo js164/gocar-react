@@ -33,7 +33,7 @@ export class Wallet extends Component {
             amount: 0
         }
         this.imagesPreview = this.imagesPreview.bind(this)
-        this.chnageText = this.chnageText.bind(this)
+        this.changeText = this.changeText.bind(this)
         this.submit = this.submit.bind(this)
         this.setCategory = this.setCategory.bind(this)
         this.clearData = this.clearData.bind(this)
@@ -136,7 +136,7 @@ export class Wallet extends Component {
             })
         }
     };
-    chnageText(e) {
+    changeText(e) {
         this.setState({
             [e.target.name]: e.target.value
         })
@@ -331,7 +331,7 @@ export class Wallet extends Component {
                                                                     aria-describedby="basic-addon2"
                                                                     name="remark"
                                                                     value={this.state.remark}
-                                                                    onChange={this.chnageText}
+                                                                    onChange={this.changeText}
                                                                 />
                                                                 <Button variant="outline-danger" id="button-addon2" onClick={this.rejectRequest}>
                                                                     Reject
@@ -377,7 +377,7 @@ export class Wallet extends Component {
                                 <Form onSubmit={this.submit}>
                                     <Form.Group className="mb-3" controlId="formBasicMobile">
                                         <Form.Label>Mobile Number</Form.Label>
-                                        <Form.Control type="number" placeholder="Enter mobile number..." name="mobile" value={this.state.mobile} onChange={this.chnageText} required />
+                                        <Form.Control type="number" placeholder="Enter mobile number..." name="mobile" value={this.state.mobile} onChange={this.changeText} required />
                                     </Form.Group>
                                     <Form.Group className="mb-3">
                                         <Form.Label>Select Class</Form.Label>
@@ -392,7 +392,7 @@ export class Wallet extends Component {
                                     </Form.Group>
                                     <Form.Group className="mb-3" controlId="formBasicdocnumber">
                                         <Form.Label>KYC Document Number</Form.Label>
-                                        <Form.Control type="text" placeholder="Enter document number..." name="KYCdocNumber" value={this.state.KYCdocNumber} onChange={this.chnageText} required />
+                                        <Form.Control type="text" placeholder="Enter document number..." name="KYCdocNumber" value={this.state.KYCdocNumber} onChange={this.changeText} required />
                                         <Form.Text className="text-muted">
                                             We'll never share your documents with anyone else.
                                         </Form.Text>
@@ -422,7 +422,7 @@ export class Wallet extends Component {
                     <Modal.Body>
                         <Form.Group className="mb-3" controlId="formBasicMobile">
                             <Form.Label>Mobile Number</Form.Label>
-                            <Form.Control type="number" placeholder="Enter mobile number..." name="mobile" value={this.state.mobile} onChange={this.chnageText} required disabled />
+                            <Form.Control type="number" placeholder="Enter mobile number..." name="mobile" value={this.state.mobile} onChange={this.changeText} required disabled />
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Form.Label>Select Class</Form.Label>
@@ -437,7 +437,7 @@ export class Wallet extends Component {
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formBasicdocnumber">
                             <Form.Label>KYC Document Number</Form.Label>
-                            <Form.Control type="text" placeholder="Enter document number..." name="KYCdocNumber" value={this.state.KYCdocNumber} onChange={this.chnageText} required />
+                            <Form.Control type="text" placeholder="Enter document number..." name="KYCdocNumber" value={this.state.KYCdocNumber} onChange={this.changeText} required />
                             <Form.Text className="text-muted">
                                 We'll never share your documents with anyone else.
                             </Form.Text>
@@ -470,7 +470,7 @@ export class Wallet extends Component {
                     <Modal.Body>
                         <Form.Group className="mb-3" controlId="formBasicMobile">
                             <Form.Label>Amount</Form.Label>
-                            <Form.Control type="number" placeholder="Enter amount..." name="amount" value={this.state.amount} onChange={this.chnageText} required />
+                            <Form.Control type="number" placeholder="Enter amount..." name="amount" value={this.state.amount} onChange={this.changeText} required />
                         </Form.Group>
                     </Modal.Body>
                     <Modal.Footer>
