@@ -4,7 +4,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import Form from 'react-bootstrap/Form';
 import axios from 'axios';
 import { setAlertShow } from '../../ReduxStore/Action';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Moment from 'moment';
@@ -56,6 +56,17 @@ export class BookCar extends Component {
     }).catch(err => {
       this.props.dispatch(setAlertShow('danger', 'Sorry!', err.message));
     })
+    console.log(this.props.location.state)
+    if (this.props.location.state && this.props.location.state.booking) {
+      this.setState({
+        start_date_time: new Date(this.props.location.state.booking.pickUpDateTime),
+        end_date_time: new Date(this.props.location.state.booking.dropUpDateTime),
+        EKm: this.props.location.state.booking.estimateKm,
+        name: this.props.location.state.booking.name,
+        mobile: this.props.location.state.booking.mobile,
+        book_for: this.props.location.state.booking.book_for
+      })
+    }
   }
 
   getEstimatedPrice() {
@@ -66,15 +77,15 @@ export class BookCar extends Component {
     if (val <= 0) {
       text = 'Please provide a valid input!';
     }
-    let val2=((val * this.state.rates.pricePerHour) + (this.state.EKm * this.state.rates.pricePerKm))
+    let val2 = ((val * this.state.rates.pricePerHour) + (this.state.EKm * this.state.rates.pricePerKm))
     text = `Estimated Price for givin date and Kms will be &#8377;` + val2 + '<br />';
     cal.innerHTML = text
     return val2
   }
 
   confirmShow() {
-    let eprice=this.getEstimatedPrice()
-    let minBalance= eprice + Math.max(eprice/10,1000)
+    let eprice = this.getEstimatedPrice()
+    let minBalance = eprice + Math.max(eprice / 10, 1000)
     let b = {
       name: this.state.name,
       mobile: this.state.mobile,
@@ -84,6 +95,7 @@ export class BookCar extends Component {
       estimateKm: this.state.EKm,
       estimatePrice: eprice,
       minBalance: minBalance,
+      book_for: this.state.book_for
     }
     this.setState({
       booking: b,
@@ -97,13 +109,28 @@ export class BookCar extends Component {
     })
   }
 
-  confirmBooking(e){
+  confirmBooking(e) {
     e.preventDefault();
-    axios.post('/booking/create',this.state.booking).then(response=>{
-      console.log(response)
-    }).catch(err=>{
-      console.log(err)
-    })
+    if (this.props.location.state && this.props.location.state.booking) {
+      const {car, ...data}= this.state.booking
+      axios.put('/booking/update/'+this.props.location.state.booking._id, data).then(response => {
+        console.log(response)
+        if (response.data.success) {
+          this.props.navigate('/profile/bookings')
+        }
+      }).catch(err => {
+        console.log(err)
+      })
+    } else {
+      axios.post('/booking/create', this.state.booking).then(response => {
+        console.log(response)
+        if (response.data.success) {
+          this.props.navigate('/profile/bookings')
+        }
+      }).catch(err => {
+        console.log(err)
+      })
+    }
   }
 
   render() {
@@ -145,7 +172,7 @@ export class BookCar extends Component {
           <button className="btn btn-success w-100 my-5" disabled={this.state.start_date_time - this.state.end_date_time >= 0 || this.state.EKm <= 0} onClick={this.getEstimatedPrice}>Calculate Estimated Price</button>
           <h5 id="Calculation"> </h5>
           <div className="d-flex flex-row justify-content-around">
-            <button className="btn btn-success w-25" disabled={this.state.start_date_time - this.state.end_date_time >= 0 || this.state.EKm <= 0 || !this.state.name || this.state.mobile.length<10} onClick={this.confirmShow}>Book Car</button>
+            <button className="btn btn-success w-25" disabled={this.state.start_date_time - this.state.end_date_time >= 0 || this.state.EKm <= 0 || !this.state.name || this.state.mobile.length < 10} onClick={this.confirmShow}>Book Car</button>
             <div className='w-25'>
               <button className="btn" disabled>Wallet:<strong> &#8377;{this.state.wallet && this.state.wallet.amount} </strong></button>
               <Link to='/profile/wallet' className='mx-2 btn btn-primary'>Add Money</Link>
@@ -170,8 +197,8 @@ export class BookCar extends Component {
                 Estimated Price:<strong> {this.state.booking.estimatePrice}</strong><br />
               </div>
             }
-            {this.state.wallet && this.state.booking && (this.state.wallet.amount < this.state.booking.minBalance) && 
-            <p className='text-danger'> You don't have sufficient balace to book a car! <br />Please add <strong> &#8377; {this.state.booking.minBalance - this.state.wallet.amount } </strong> to wallet to continue.</p>}
+            {this.state.wallet && this.state.booking && (this.state.wallet.amount < this.state.booking.minBalance) &&
+              <p className='text-danger'> You don't have sufficient balace to book a car! <br />Please add <strong> &#8377; {this.state.booking.minBalance - this.state.wallet.amount} </strong> to wallet to continue.</p>}
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={this.confirmClose}>
@@ -189,6 +216,8 @@ export class BookCar extends Component {
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default function (props) {
+  const navigate = useNavigate()
   const params = useParams()
-  return <BookCar {...props} params={params} />;
+  const location = useLocation();
+  return <BookCar {...props} params={params} navigate={navigate} location={location} />;
 }

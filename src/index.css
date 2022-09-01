@@ -1,0 +1,11 @@
+.accordion-button {
+    background-color: transparent;
+  }
+
+  .accordion-button:focus {
+    background-color:cadetblue
+  }
+
+  .accordion-button:not(.collapsed) {
+    background-color: cadetblue;
+  }
