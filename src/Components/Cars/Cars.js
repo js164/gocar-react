@@ -82,9 +82,9 @@ export class Cars extends Component {
                     this.state.selectedCar.length === 0 ? "No car Available!" :
                      this.state.selectedCar.map(car => {
                         return <div key={car._id} className="col-md-4">
-                            <Card className='m-2' style={{ background: this.context.generalContext.mode === 'dark' ? '#061020' : 'white', color: this.context.generalContext.mode === 'dark' ? 'white' : 'black', border: "none" }}>
+                            <Card className='m-2' style={{ background: this.context.generalContext.mode === 'dark' ? '#061020' : 'white', color: this.context.generalContext.mode === 'dark' ? 'white' : 'black', border: "solid;black;1px;", boxShadow:this.context.generalContext.mode === 'dark' ? "0 4px 8px 0 rgba(100, 100, 100, 1), 0 6px 20px 0 rgba(100, 100, 100, 0.19)" : "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"}}>
                                 <Badge bg={car.category[0] === 'A' ? 'success' : car.category[0] === 'B' ? 'primary' : 'secondary'} style={{ position: "absolute", right: "-10px", top: "-10px", cursor: "pointer" }}>{car.category}</Badge>
-                                <Card.Img variant="top" src={car.image ? 'data:image/jpeg;base64,'+car.image : "https://wallpapercave.com/wp/wp5055262.jpg"} />
+                                <Card.Img variant="top" style={{height: "20vh", objectFit:"contain"}} src={car.image ? 'data:image/jpeg;base64,'+car.image : "https://wallpapercave.com/wp/wp5055262.jpg"} />
                                 <Card.Body>
                                     <Card.Title>{car.name}</Card.Title>
                                     <Card.Subtitle className="mb-2 font-weight-light" style={darkMode}>{car.carCompany}</Card.Subtitle>
